@@ -61,7 +61,6 @@ class Scheduler:
 
         sessions.sort(key=lambda x: (x.day_of_week, x.start_time))
         for i in range(1, len(sessions)):
-            print(sessions[i])
             if sessions[i].day_of_week == sessions[i - 1].day_of_week and sessions[i].start_time < sessions[i - 1].end_time:
                 return False
 
