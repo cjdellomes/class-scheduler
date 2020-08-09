@@ -84,6 +84,35 @@ class TestScheduler(unittest.TestCase):
         self.assertCountEqual(Scheduler.get_courses_by_numbers(
             courses, course_numbers), [course_7, course_6, course_2, course_3])
 
+    def test_is_valid_schedule_empty_schedule(self):
+        self.assertTrue(Scheduler.is_valid_schedule([], 0))
+
+    def test_is_valid_schedule_single_course(self):
+        session_1 = Session(1, datetime.time(
+            13, 45, 0), datetime.time(15, 0, 0))
+        session_2 = Session(2, datetime.time(
+            13, 45, 0), datetime.time(15, 0, 0))
+        session_3 = Session(3, datetime.time(
+            13, 45, 0), datetime.time(15, 0, 0))
+
+        course_1 = Course(1, '123', 'course 1', Professor(
+            'prof 1', 'prof_1@test.com'), 4, [session_1, session_2, session_3], Final(datetime.date(2020, 12, 4), True, 60))
+
+        self.assertTrue(Scheduler.is_valid_schedule([course_1], 0))
+
+    def test_is_valid_schedule_single_course_no_final(self):
+        session_1 = Session(1, datetime.time(
+            13, 45, 0), datetime.time(15, 0, 0))
+        session_2 = Session(2, datetime.time(
+            13, 45, 0), datetime.time(15, 0, 0))
+        session_3 = Session(3, datetime.time(
+            13, 45, 0), datetime.time(15, 0, 0))
+
+        course_1 = Course(1, '123', 'course 1', Professor(
+            'prof 1', 'prof_1@test.com'), 4, [session_1, session_2, session_3], None)
+
+        self.assertTrue(Scheduler.is_valid_schedule([course_1], 0))
+
 
 if __name__ == '__main__':
     unittest.main()

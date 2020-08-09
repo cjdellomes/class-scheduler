@@ -57,15 +57,17 @@ class Scheduler:
         for course in courses:
             finals.append(course.final)
             for session in course.sessions:
-                sessions.append(sessions)
+                sessions.append(session)
 
         sessions.sort(key=lambda x: (x.day_of_week, x.start_time))
         for i in range(1, len(sessions)):
             if sessions[i].day_of_week == sessions[i - 1].day_of_week and sessions[i].start_time > sessions[i - 1].end_time:
                 return False
 
-        finals.sort(key=lambda x: x.date)
+        finals.sort(key=lambda x: x.date if x else 0)
         for i in range(1, len(finals)):
+            if finals[i] is None or finals[i - 1] is None:
+                continue
             if (finals[i] - finals[i - 1]).days < min_days_between_finals:
                 return False
 
