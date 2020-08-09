@@ -39,5 +39,5 @@ class Course:
 class Scheduler:
 
     @staticmethod
-    def get_schdeules(courses, max_units, course_numbers):
+    def get_schdeules(courses, max_units, course_numbers, days_between_finals):
         pass
