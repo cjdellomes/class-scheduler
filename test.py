@@ -113,6 +113,27 @@ class TestScheduler(unittest.TestCase):
 
         self.assertTrue(Scheduler.is_valid_schedule([course_1], 0))
 
+    def test_is_valid_schedule_same_session_times_courses(self):
+        session_1 = Session(1, datetime.time(
+            13, 45, 0), datetime.time(15, 0, 0))
+        session_2 = Session(2, datetime.time(
+            13, 45, 0), datetime.time(15, 0, 0))
+        session_3 = Session(3, datetime.time(
+            13, 45, 0), datetime.time(15, 0, 0))
+        session_4 = Session(1, datetime.time(
+            13, 45, 0), datetime.time(15, 0, 0))
+        session_5 = Session(2, datetime.time(
+            13, 45, 0), datetime.time(15, 0, 0))
+        session_6 = Session(3, datetime.time(
+            13, 45, 0), datetime.time(15, 0, 0))
+
+        course_1 = Course(1, '123', 'course 1', Professor(
+            'prof 1', 'prof_1@test.com'), 4, [session_1, session_2, session_3], None)
+        course_2 = Course(2, '123', 'course 2', Professor(
+            'prof 2', 'prof_2@test.com'), 4, [session_4, session_5, session_6], None)
+
+        self.assertFalse(Scheduler.is_valid_schedule([course_1, course_2], 0))
+
 
 if __name__ == '__main__':
     unittest.main()
