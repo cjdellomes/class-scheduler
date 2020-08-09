@@ -239,6 +239,147 @@ class TestScheduler(unittest.TestCase):
         self.assertTrue(Scheduler.is_valid_schedule([course_1, course_2], 0))
         self.assertFalse(Scheduler.is_valid_schedule([course_1, course_2], 1))
 
+    def test_is_valid_schedule_different_day_finals_no_overlapping_session_times(self):
+        session_1 = Session(1, datetime.time(
+            13, 45, 0), datetime.time(15, 0, 0))
+        session_2 = Session(2, datetime.time(
+            13, 45, 0), datetime.time(15, 0, 0))
+        session_3 = Session(3, datetime.time(
+            13, 45, 0), datetime.time(15, 0, 0))
+        session_4 = Session(4, datetime.time(
+            14, 45, 0), datetime.time(16, 0, 0))
+        session_5 = Session(5, datetime.time(
+            14, 45, 0), datetime.time(16, 0, 0))
+
+        final_1 = Final(datetime.date(2020, 12, 4), True, 60)
+        final_2 = Final(datetime.date(2020, 12, 5), True, 60)
+
+        course_1 = Course(1, '123', 'course 1', Professor(
+            'prof 1', 'prof_1@test.com'), 4, [session_1, session_2, session_3], final_1)
+        course_2 = Course(2, '123', 'course 2', Professor(
+            'prof 2', 'prof_2@test.com'), 4, [session_4, session_5], final_2)
+
+        self.assertTrue(Scheduler.is_valid_schedule([course_1, course_2], 0))
+        self.assertTrue(Scheduler.is_valid_schedule([course_1, course_2], 1))
+        self.assertFalse(Scheduler.is_valid_schedule([course_1, course_2], 2))
+        self.assertFalse(Scheduler.is_valid_schedule([course_1, course_2], 3))
+
+    def test_is_valid_schedule_same_day_finals_overlapping_session_times(self):
+        session_1 = Session(1, datetime.time(
+            13, 45, 0), datetime.time(15, 0, 0))
+        session_2 = Session(2, datetime.time(
+            13, 45, 0), datetime.time(15, 0, 0))
+        session_3 = Session(3, datetime.time(
+            13, 45, 0), datetime.time(15, 0, 0))
+        session_4 = Session(1, datetime.time(
+            14, 45, 0), datetime.time(15, 0, 0))
+        session_5 = Session(2, datetime.time(
+            14, 45, 0), datetime.time(15, 0, 0))
+        session_6 = Session(3, datetime.time(
+            15, 45, 0), datetime.time(15, 0, 0))
+
+        final_1 = Final(datetime.date(2020, 12, 4), True, 60)
+        final_2 = Final(datetime.date(2020, 12, 4), True, 60)
+
+        course_1 = Course(1, '123', 'course 1', Professor(
+            'prof 1', 'prof_1@test.com'), 4, [session_1, session_2, session_3], final_1)
+        course_2 = Course(2, '123', 'course 2', Professor(
+            'prof 2', 'prof_2@test.com'), 4, [session_4, session_5, session_6], final_2)
+
+        self.assertFalse(Scheduler.is_valid_schedule([course_1, course_2], 0))
+        self.assertFalse(Scheduler.is_valid_schedule([course_1, course_2], 1))
+
+    def test_is_valid_schedule_different_day_finals_overlapping_session_times(self):
+        session_1 = Session(1, datetime.time(
+            13, 45, 0), datetime.time(15, 0, 0))
+        session_2 = Session(2, datetime.time(
+            13, 45, 0), datetime.time(15, 0, 0))
+        session_3 = Session(3, datetime.time(
+            13, 45, 0), datetime.time(15, 0, 0))
+        session_4 = Session(1, datetime.time(
+            14, 45, 0), datetime.time(15, 0, 0))
+        session_5 = Session(2, datetime.time(
+            14, 45, 0), datetime.time(15, 0, 0))
+        session_6 = Session(3, datetime.time(
+            15, 45, 0), datetime.time(15, 0, 0))
+
+        final_1 = Final(datetime.date(2020, 12, 4), True, 60)
+        final_2 = Final(datetime.date(2020, 12, 5), True, 60)
+
+        course_1 = Course(1, '123', 'course 1', Professor(
+            'prof 1', 'prof_1@test.com'), 4, [session_1, session_2, session_3], final_1)
+        course_2 = Course(2, '123', 'course 2', Professor(
+            'prof 2', 'prof_2@test.com'), 4, [session_4, session_5, session_6], final_2)
+
+        self.assertFalse(Scheduler.is_valid_schedule([course_1, course_2], 0))
+        self.assertFalse(Scheduler.is_valid_schedule([course_1, course_2], 1))
+
+    def test_is_valid_schedule_different_day_finals_one_overlapping_session_time(self):
+        session_1 = Session(1, datetime.time(
+            13, 45, 0), datetime.time(15, 0, 0))
+        session_2 = Session(2, datetime.time(
+            13, 45, 0), datetime.time(15, 0, 0))
+        session_3 = Session(3, datetime.time(
+            13, 45, 0), datetime.time(15, 0, 0))
+        session_4 = Session(3, datetime.time(
+            14, 45, 0), datetime.time(16, 0, 0))
+        session_5 = Session(4, datetime.time(
+            14, 45, 0), datetime.time(15, 0, 0))
+        session_6 = Session(5, datetime.time(
+            15, 45, 0), datetime.time(15, 0, 0))
+        session_7 = Session(5, datetime.time(
+            8, 0, 0), datetime.time(13, 0, 0))
+
+        final_1 = Final(datetime.date(2020, 12, 4), True, 60)
+        final_2 = Final(datetime.date(2020, 12, 5), True, 60)
+        final_3 = Final(datetime.date(2020, 12, 6), True, 60)
+
+        course_1 = Course(1, '123', 'course 1', Professor(
+            'prof 1', 'prof_1@test.com'), 4, [session_1, session_2, session_3], final_1)
+        course_2 = Course(2, '123', 'course 2', Professor(
+            'prof 2', 'prof_2@test.com'), 4, [session_4, session_5, session_6], final_2)
+        course_3 = Course(3, '123', 'course 3', Professor(
+            'prof 3', 'prof_3@test.com'), 4, [session_7], final_3)
+
+        self.assertFalse(Scheduler.is_valid_schedule(
+            [course_1, course_2, course_3], 0))
+        self.assertFalse(Scheduler.is_valid_schedule(
+            [course_1, course_2, course_3], 1))
+        self.assertFalse(Scheduler.is_valid_schedule(
+            [course_1, course_2, course_3], 2))
+
+    def test_is_valid_schedule_same_and_different_day_finals_no_overlapping_session_time(self):
+        session_1 = Session(1, datetime.time(
+            13, 45, 0), datetime.time(15, 0, 0))
+        session_2 = Session(2, datetime.time(
+            13, 45, 0), datetime.time(15, 0, 0))
+        session_3 = Session(3, datetime.time(
+            13, 45, 0), datetime.time(15, 0, 0))
+        session_4 = Session(4, datetime.time(
+            14, 45, 0), datetime.time(16, 0, 0))
+        session_5 = Session(5, datetime.time(
+            14, 45, 0), datetime.time(16, 0, 0))
+        session_6 = Session(5, datetime.time(
+            8, 0, 0), datetime.time(13, 0, 0))
+
+        final_1 = Final(datetime.date(2020, 12, 4), True, 60)
+        final_2 = Final(datetime.date(2020, 12, 5), True, 60)
+        final_3 = Final(datetime.date(2020, 12, 5), True, 60)
+
+        course_1 = Course(1, '123', 'course 1', Professor(
+            'prof 1', 'prof_1@test.com'), 4, [session_1, session_2, session_3], final_1)
+        course_2 = Course(2, '123', 'course 2', Professor(
+            'prof 2', 'prof_2@test.com'), 4, [session_4, session_5], final_2)
+        course_3 = Course(3, '123', 'course 3', Professor(
+            'prof 3', 'prof_3@test.com'), 4, [session_6], final_3)
+
+        self.assertTrue(Scheduler.is_valid_schedule(
+            [course_1, course_2, course_3], 0))
+        self.assertFalse(Scheduler.is_valid_schedule(
+            [course_1, course_2, course_3], 1))
+        self.assertFalse(Scheduler.is_valid_schedule(
+            [course_1, course_2, course_3], 2))
+
 
 if __name__ == '__main__':
     unittest.main()
