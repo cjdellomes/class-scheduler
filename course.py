@@ -5,7 +5,13 @@ from final import Final
 
 class Course:
 
-    def __init__(self, id, number, title, professor, units, sessions, final):
+    def __init__(self, id: int,
+                 number: str,
+                 title: str,
+                 professor: Professor,
+                 units: int,
+                 sessions: list,
+                 final: Final):
         self.id = id
         self.number = number
         self.title = title

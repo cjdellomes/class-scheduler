@@ -9,9 +9,11 @@ class Scheduler:
                       course_numbers: set,
                       min_days_between_finals: int):
         result = []
-        possible_courses = get_courses_by_numbers(courses, course_numbers)
-        get_schedules_helper(possible_courses, max_units, course_numbers,
-                             days_between_finals, [], result)
+        possible_courses = Scheduler.get_courses_by_numbers(
+            courses, course_numbers)
+
+        Scheduler.get_schedules_helper(possible_courses, max_units, course_numbers,
+                                       min_days_between_finals, [], result)
         return result
 
     @staticmethod
@@ -21,7 +23,7 @@ class Scheduler:
                              min_days_between_finals: int,
                              curr_schedule: list,
                              result: list):
-        if curr_units < 0 or not is_valid_schedule(curr_schedule, min_days_between_finals):
+        if curr_units < 0 or not Scheduler.is_valid_schedule(curr_schedule, min_days_between_finals):
             return
         if len(remaining_course_numbers) == 0:
             result.append(curr_schedule)
@@ -33,8 +35,8 @@ class Scheduler:
                 curr_schedule.append(course)
                 remaining_course_numbers.remove(course.number)
 
-                get_schedules_helper(courses, curr_units, remaining_course_numbers,
-                                     min_days_between_finals, curr_schedule, result)
+                Scheduler.get_schedules_helper(courses, curr_units, remaining_course_numbers,
+                                               min_days_between_finals, curr_schedule, result)
 
                 curr_schedule.pop()
                 curr_units += course.units
