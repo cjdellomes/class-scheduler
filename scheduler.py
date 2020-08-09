@@ -68,7 +68,7 @@ class Scheduler:
         for i in range(1, len(finals)):
             if finals[i] is None or finals[i - 1] is None:
                 continue
-            if (finals[i] - finals[i - 1]).days < min_days_between_finals:
+            if (finals[i].date - finals[i - 1].date).days < min_days_between_finals:
                 return False
 
         return True
