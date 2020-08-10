@@ -45,7 +45,7 @@ class TestScheduler(unittest.TestCase):
         course_numbers = {'100', '200', '300'}
         min_days_between_finals = 1
         self.assertEqual(Scheduler.get_schedules(
-            courses, max_units, course_numbers, min_days_between_finals), set())
+            courses, max_units, course_numbers, min_days_between_finals), [])
 
     def test_get_courses_by_numbers_empty_course_list(self):
         courses = []

@@ -9,7 +9,7 @@ class Scheduler:
                       max_units: int,
                       course_numbers: set,
                       min_days_between_finals: int):
-        result = set()
+        result = []
         possible_courses = Scheduler.get_courses_by_numbers(
             courses, course_numbers)
 
@@ -23,11 +23,14 @@ class Scheduler:
                              remaining_course_numbers: set,
                              min_days_between_finals: int,
                              curr_schedule: set,
-                             result: set):
+                             result: list):
         if curr_units < 0 or not Scheduler.is_valid_schedule(curr_schedule, min_days_between_finals):
             return
         if len(remaining_course_numbers) == 0:
-            result.add(tuple(curr_schedule.copy()))
+            for schedule in result:
+                if curr_schedule == schedule:
+                    return
+            result.append(curr_schedule.copy())
             return
 
         for course in courses:
