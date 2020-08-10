@@ -1,5 +1,5 @@
 from course import Course
-import datetime
+from datetime import date
 
 
 class Scheduler:
@@ -9,12 +9,12 @@ class Scheduler:
                       max_units: int,
                       course_numbers: set,
                       min_days_between_finals: int):
-        result = []
+        result = set()
         possible_courses = Scheduler.get_courses_by_numbers(
             courses, course_numbers)
 
         Scheduler.get_schedules_helper(possible_courses, max_units, course_numbers,
-                                       min_days_between_finals, [], result)
+                                       min_days_between_finals, set(), result)
         return result
 
     @staticmethod
@@ -22,12 +22,12 @@ class Scheduler:
                              curr_units: int,
                              remaining_course_numbers: set,
                              min_days_between_finals: int,
-                             curr_schedule: list,
-                             result: list):
+                             curr_schedule: set,
+                             result: set):
         if curr_units < 0 or not Scheduler.is_valid_schedule(curr_schedule, min_days_between_finals):
             return
         if len(remaining_course_numbers) == 0:
-            result.append(curr_schedule.copy())
+            result.add(tuple(curr_schedule.copy()))
             return
 
         for course in courses:
@@ -35,14 +35,14 @@ class Scheduler:
                 continue
 
             curr_units -= course.units
-            curr_schedule.append(course)
+            curr_schedule.add(course)
             remaining_course_numbers.remove(course.number)
 
             Scheduler.get_schedules_helper(courses, curr_units, remaining_course_numbers,
                                            min_days_between_finals, curr_schedule, result)
 
             remaining_course_numbers.add(course.number)
-            curr_schedule.pop()
+            curr_schedule.remove(course)
             curr_units += course.units
 
     @staticmethod
@@ -54,10 +54,10 @@ class Scheduler:
         return result
 
     @staticmethod
-    def is_valid_schedule(courses: list, min_days_between_finals: int):
+    def is_valid_schedule(courses: set, min_days_between_finals: int):
         sessions = []
         finals = []
-        min_date = datetime.date(1970, 1, 1)
+        min_date = date(1970, 1, 1)
         for course in courses:
             finals.append(course.final)
             for session in course.sessions:
