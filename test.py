@@ -9,12 +9,45 @@ import unittest
 
 class TestScheduler(unittest.TestCase):
 
+    def test_scheduler(self):
+        course_1 = Course(1, '201', 'test1', None, 4, [
+            Session(1, datetime.time(13, 45, 0), datetime.time(15, 0, 0)),
+            Session(2, datetime.time(13, 45, 0), datetime.time(15, 0, 0)),
+            Session(3, datetime.time(13, 45, 0), datetime.time(15, 0, 0)),
+        ], Final(datetime.date(2020, 12, 14), True, 70))
+        course_2 = Course(2, '202', 'test2', None, 4, [
+            Session(1, datetime.time(8, 45, 0), datetime.time(10, 0, 0)),
+            Session(3, datetime.time(8, 45, 0), datetime.time(10, 0, 0)),
+            Session(5, datetime.time(8, 45, 0), datetime.time(10, 0, 0)),
+        ], None)
+        course_3 = Course(3, '202', 'test2', None, 4, [
+            Session(1, datetime.time(9, 0, 0), datetime.time(10, 15, 0)),
+            Session(3, datetime.time(9, 0, 0), datetime.time(10, 15, 0)),
+            Session(5, datetime.time(9, 0, 0), datetime.time(10, 15, 0)),
+        ], Final(datetime.date(2020, 12, 16), True, 73))
+        course_4 = Course(4, '205', 'test3', None, 4, [
+            Session(1, datetime.time(10, 45, 0), datetime.time(12, 0, 0)),
+            Session(2, datetime.time(10, 45, 0), datetime.time(12, 0, 0)),
+            Session(4, datetime.time(10, 45, 0), datetime.time(12, 0, 0)),
+        ], Final(datetime.date(2020, 12, 8), True, 64))
+
+        courses = [course_1, course_2, course_3, course_4]
+        max_units = 20
+        course_numbers = {'201', '202', '205'}
+        min_days_between_finals = 0
+
+        self.assertCountEqual(Scheduler.get_schedules(
+            courses, max_units, course_numbers, min_days_between_finals), [
+                [course_1, course_2, course_4],
+                [course_1, course_3, course_4]
+        ])
+
     def test_scheduler_empty_course_list(self):
         courses = []
         max_units = 20
         course_numbers = {'100', '200', '300'}
         min_days_between_finals = 1
-        self.assertEqual(Scheduler.get_schdeules(
+        self.assertEqual(Scheduler.get_schedules(
             courses, max_units, course_numbers, min_days_between_finals), [])
 
     def test_get_courses_by_numbers_empty_course_list(self):

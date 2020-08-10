@@ -19,3 +19,20 @@ class Course:
         self.units = units
         self.sessions = sessions
         self.final = final
+
+    def __str__(self):
+        return '''
+            ID: {id}
+            Number: {number}
+            Title: {title}
+            Professor: {professor}
+            Units: {units}
+            Sessions: {sessions}
+            Final: {final}'''.format(
+            id=self.id,
+            number=self.number,
+            title=self.title,
+            professor=str(self.professor),
+            units=self.units,
+            sessions=str(self.sessions),
+            final=str(self.final))
